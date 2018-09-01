@@ -1,0 +1,103 @@
+
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
+CIS 120 Game Project README
+PennKey: khantk
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
+
+===================
+=: Core Concepts :=
+===================
+
+- List the four core concepts, the features they implement, and why each feature
+  is an appropriate use of the concept. Incorporate the feedback you got after
+  submitting your proposal.
+
+  1. Appropriately modeling state using 2-D arrays
+  		I used a 2D GameObj array to model the main board of my game. Each index of the array represents
+  		a position on the screen. Every few seconds, new bricks and powerUps are inserted into the first 
+  		row of the array. Existing items are also shifted down one index. At first I was going to use a 
+  		2D array of integers but I realized that directly using GameObj 2D array would be a lot more 
+  		straightforward. In my case, a 2D array was necessary in order to keep track of the positions of 
+  		my objects and to make manipulating my board a lot easier. 
+
+  2. Appropriately modeling state using collections
+        I used Collections to keep track of the number of Balls and Bullets in the game. In both cases, 
+        using a Set was sufficient because order didn't matter. Each time a tick() is called, I could 
+        loop through the sets of balls and bullets and update them accordingly. I did not need to use collections 
+        to keep track of my bricks and powerUps however because my 2D array did that for me already. 
+
+  3. Using inheritance/subtyping for dynamic dispatch
+        Other than GameObj, I used an abstract class called PowerUp which extended GameObj. All the powerUps in the game
+        extend PowerUp. Thus, all three powerUps had to implement the method activate(), which returns an indicator
+        of which powerUp got activated, and draw(), which draws the powerUp. It was useful to use inheritance for my 
+        PowerUps because instead treating each powerUp as a separate object, which would require making separate
+        methods for each, I could use the same methods for all of them, making my life a lot easier. Making them GameObjs 
+        also allowed me to store them in the same array as the bricks. 
+
+  4. Using JUnit on a testable component of my game
+  		A testable component of my game was my BoardLayout component which used a 2D array to represent the bricks and 
+  		powerUps of my game. It is independent of my GUI since I am just storing/manipulating the object values in this array so 
+  		I can draw them later in GameCourt. I used JUnit tests to make sure my methods in this class were updating the 2D arrays 
+  		correctly. By design, this component was unit testable. 
+
+=========================
+=: Your Implementation :=
+=========================
+
+- Provide an overview of each of the classes in your code, and what their
+  function is in the overall game.
+  
+  GameObj.java: A class that represents all the objects in the game. I used the methods in this class to move/bounce my objects
+                off of one another, and to check whether two objects intersected. 
+ 	 Ball.java : A Game Object that represents a ball in the game. The ball is used to break bricks. 
+  	            You will lose the game if you fail to catch all your balls. The ball can also gain the ability to
+  	           	burn through all the bricks if you hit the 'FireBall' powerup. 
+   	Brick.java : A Game Object that represents a brick in the game. Each brick is worth one point and the goal of this game 
+              	 is to break the bricks before they reach your paddle. The bricks also have varying strengths(how many times 
+              	 you need to hit them to break them).
+  	PowerUp.java : An abstract class that represents a powerUp in the game. Extends GameObj. It contains an activate() method that 
+  	               indicates which powerUp got activated. 
+  		ExtraBall.java : A PowerUp object that represents the black powerUp that adds a ball to the game 
+  		FireBall.java: A PowerUp object that represents the red powerUp that changes the ball into a fireball 
+  		GunPaddle.java: A PowerUp object that changes the paddles into guns 
+  	
+  	Paddle.java : Represents the paddle components in the game. The paddle is made up of four paddle components. Each 
+  	              component bounces the ball in a different direction. The components can also be turned into guns (basically changing 
+  	              the appearance). 
+  	Bullet.java : Represents the bullets in the game. When you collect the gun powerUp you are able to shoot these bullets out of your paddle.
+  	              The bullets can also be used to break the bricks.	              
+  BoardLayout.java: Represents and keeps track of the board of Bricks and PowerUps in the game. Contains methods that can be used to
+                    manipulate the board, such as lowering the bricks and PowerUps on the board, and adding new bricks and PowerUps. 
+  BoardLayoutTest.java: J-unit testing of BoardLayout.java
+  StartMenu.java: a JavaPanel that represents the start menu that shows up in the beginning. 
+  GameCourt.java: The JavaPanel that draws and updates the game with a Timer. Also handles all the game logic and mechanisms. 
+  Game.java: Used to run the game and set up the frames, JPanels, etc. 
+  Direction.java: enum used in methods in GameObj.
+  
+  
+- Were there any significant stumbling blocks while you were implementing your
+  game (related to your design, or otherwise)?
+  
+  At first I tried implementing the BoardLayout using a 2D array of integers. But I realized that it was hard to update the board if
+  the actual Brick/PowerUP objects are not being manipulated directly. Thus, I changed my design so that it was 2D array of GameObjs. 
+  I also had trouble implementing the activate methods in the Powerups. Since the ability of each powerUp was so different, it was 
+  hard to create a single method that could perform all the actions. Thus, I simply made the method indicate which powerUp was activated
+  and handled all the actions in my GameCourt.   
+
+- Evaluate your design. Is there a good separation of functionality? How well is
+  private state encapsulated? What would you refactor, if given the chance?
+  
+  I think there is a decent separation of functionality. For example the functionality of the Bricks/PowerUp grid, 
+  was separated from the rest of the design. I'm not really sure how I could refactor. 
+
+
+========================
+=: External Resources :=
+========================
+
+- Cite any external resources (libraries, images, tutorials, etc.) that you may
+  have used while implementing your game.
+  
+  I used the Collections, Swing, and Graphics libraries in my code. Everything else I made myself. 
+  
+  
